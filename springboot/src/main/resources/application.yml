@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    username: rahul
+    password: rahul
+    url: jdbc:mysql://localhost:3306/book_catalog
+  flyway:
+    table: custom_flyway_migration_version_table
+    baseline-on-migrate: true
+    enabled: true
+    baseline-version: 1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+#      probes enable true by default on kubernetes env
+      probes:
+
+        enabled: true

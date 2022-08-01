@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/springsecurity
+    username: root
+    password:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: xxxx
+            client-secret: xxxx
+            client-name: xxx
+            issuer-uri: xxxx
+
+
+
+
+logging:
+  level:
+    org.springframework.security: debug
