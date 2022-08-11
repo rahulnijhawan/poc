@@ -28,6 +28,7 @@ public class ProjectConfig {
         // Template cache is true by default. Set to false if you want
         // templates to be automatically updated when modified.
         templateResolver.setCacheable(true);
+        // c
         return templateResolver;
     }
 
