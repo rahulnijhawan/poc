@@ -29,6 +29,7 @@ public class ProjectConfig {
         // templates to be automatically updated when modified.
         templateResolver.setCacheable(true);
         // c
+        // d
         return templateResolver;
     }
 
