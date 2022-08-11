@@ -45,7 +45,7 @@ public class CustomAuthenticationFilter/* implements Filter*/ extends OncePerReq
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getServletPath().equals("/test");
+        return !request.getServletPath().equals("/login");
     }
 /*
     @Override

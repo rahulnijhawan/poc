@@ -1,1 +1,30 @@
-<h1>home</h1>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Hello!</h1>
+<form method="post" action="/secure">
+    <button type="submit">PRESS ME!</button>
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
+</form>
+
+<form method="delete" action="/delete">
+    <button type="submit">Delete ME!</button>
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
+</form>
+
+<form method="put" action="/put">
+    <button type="submit">Put ME!</button>
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}">
+</form>
+</body>
+</html>

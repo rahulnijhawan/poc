@@ -39,7 +39,7 @@ public class SecurityConfigg {
                 .antMatchers("/public").permitAll()
                 .anyRequest().authenticated();
 //        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        http.csrf().disable();
+       // http.csrf().disable();
         return http.build();
     }
 
