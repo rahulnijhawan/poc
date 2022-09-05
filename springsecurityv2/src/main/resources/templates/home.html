@@ -22,9 +22,10 @@
 
 <form method="put" action="/put">
     <button type="submit">Put ME!</button>
-    <input type="hidden"
+    <input type="hidden" a="${_csrf.headerName}"
            th:name="${_csrf.parameterName}"
            th:value="${_csrf.token}">
+
 </form>
 </body>
 </html>
