@@ -9,13 +9,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 //Antoine de Saint-Exupéry: “Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.”
 
@@ -23,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * HOW and What
  * How -> is implementation
  * What -> is use the implementation and not need to know how it implemented.
- *
  * These candidate lambda expressions are much like Tom Smykowski, in the movie Office Space,a whose job is to
  * “take specifications from the customers and bring them down to the software engineers.”
  * For this reason, I call the refactoring of lambdas to method references the office-space pattern
@@ -209,7 +213,7 @@ public class FunctionalProgrammingTest {
                 //The filter() method returns an iterator just like the map() method does
                 //the elements in the result collection that filter() returned are a subset of the elements in the input collection.
                 .filter(predicateStartsWithN)
-                .collect(Collectors.toList())
+                .collect(toList())
                 .forEach(System.out::println);
 
     }
@@ -514,6 +518,123 @@ public class FunctionalProgrammingTest {
         }
     }
 
+
+    @Test
+    @DisplayName("ComparatorInterfaceUsingStream")
+    public void comparatorInterfaceUsingStream() {
+        List<Person> people = Arrays.asList(
+                new Person("Nivedita", 37),
+                new Person("Kiaan Nijhawan", 5),
+                new Person("Gugu Nijhawan", 5),
+                new Person("Rahul", 39)
+        );
+
+
+        System.out.println(" ------------------ Sort by Age ------------------- ");
+        System.out.println();
+        //Comparator is a functional interface
+        System.out.println("--- Ascending by age= ");
+        // Ascending
+        people.stream()
+                .sorted((p1, p2) -> p1.ageDifference(p2))
+                .toList().forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("--- Descending by age= ");
+        // Descending
+        people.stream()
+                .sorted((p1, p2) -> p2.ageDifference(p1))
+                .toList().forEach(System.out::println);
+
+        /**
+         *The code is fantastically concise, thanks to the method-reference convenience the Java compiler offers.
+         * The compiler took the parameters, the two person instances being compared, and made the first the ageDifference()
+         * method’s target and the second the parameter. Rather than explicitly connecting these, we let the compiler work
+         * a little extra for us. When using this conciseness, we must be careful to ensure that the first parameter is really
+         * the intended target of the method referenced and the remaining parameters are its arguments.
+         */
+        System.out.println();
+        System.out.println("Office-space pattern --- Ascending by age= ");
+        // Ascending
+        people.stream()
+                .sorted(Person::ageDifference)
+                .toList().forEach(System.out::println);
+
+        Comparator<Person> comparatorAscending = (p1, p2) -> p1.ageDifference(p2);
+        /**
+         * Under the hood the reversed() creates a comparator that swaps its parameters’ order of comparison.
+         * This makes the reversed() method a higher- order method—this function creates and returns another functional expression
+         * with no side effect.
+         */
+
+        Comparator<Person> comparatorDescending= comparatorAscending.reversed();
+
+        System.out.println();
+        System.out.println("comparatorAscending by age= ");
+        people.stream()
+                .sorted(comparatorAscending)
+                .toList().forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("comparatorDescending by age= ");
+        people.stream()
+                .sorted(comparatorDescending)
+                .toList().forEach(System.out::println);
+
+
+        System.out.println();
+        System.out.println(" ------------------ Sort by Name ------------------- ");
+        System.out.println(" Ascending by name= ");
+        people.stream()
+                .sorted(Comparator.comparing(Person::getName))
+                .toList().forEach(System.out::println);
+
+        System.out.println(" Descending by name= ");
+        people.stream()
+                .sorted((p1, p2) -> p2.getName().compareTo(p1.getName()))
+                .toList().forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("--- Youngest person by age= ");
+        people.stream()
+                .min(Person::ageDifference)
+                .ifPresent(System.out::println);
+
+        System.out.println();
+        System.out.println("--- Oldest person by age= ");
+        people.stream()
+                .max(Person::ageDifference)
+                .ifPresent(System.out::println);
+
+
+        /**
+         * The comparing() method uses the logic embedded in the provided lambda expression to create a Comparator.
+         * In other words, it’s a higher-order function that takes in one function (Function) and returns another (Comparator).
+         */
+        System.out.println();
+        System.out.println("--- Function<Person, String> compareByName by name= ");
+        Function<Person, String> compareByName = person -> person.getName();
+        people.stream()
+                .sorted(Comparator.comparing(compareByName))
+                .forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("--- Function<Person, String> compareByAge by name= ");
+        Function<Person, Integer> compareByAge = person -> person.getAge();
+        people.stream()
+                .sorted(Comparator.comparing(compareByAge))
+                .forEach(System.out::println);
+
+
+        System.out.println();
+        System.out.println("--- Function<Person, String> compare by name then by age= ");
+        people.stream()
+                .sorted(Comparator.comparing(compareByName).thenComparing(compareByAge))
+                .forEach(System.out::println);
+
+
+
+    }
     @RequiredArgsConstructor
     @Setter
     @Getter
@@ -535,6 +656,7 @@ public class FunctionalProgrammingTest {
                 new Person("Kiaan Nijhawan", 5),
         new Person("Rahul", 39)
         );
+        // anonymous class
         Comparator peopleComparator = new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
@@ -559,12 +681,99 @@ public class FunctionalProgrammingTest {
     }
 
     @Test
-    @DisplayName("ComparatorInterfaceUsingStream")
-    void comparatorInterfaceUsingStream() {
+    @DisplayName("collect test")
+    void collectTest() {
+        /**
+         * stream.collect is a reduce operation that’s useful for transforming the collection into another form,
+         * often a mutable collection
+         *
+         * The collect() function, when combined with the utility methods of the Collectors class,
+         * provides a wealth of conveniences
+         *
+         *  mapping(), collectingAndThen(), minBy(), maxBy(), and groupingBy().
+         */
+
+        List<Person> people = Arrays.asList(
+                new Person("Nivedita", 37),
+                new Person("Kiaan Nijhawan", 5),
+                new Person("Gugu Nijhawan", 5),
+                new Person("Rahul", 39)
+        );
+
+        /**
+         * The code produced the desired result, but there are a few issues. First, the operation of adding an element
+         * into the target collection is pretty low level— imperative rather than declarative.
+         * If we decide to make the iteration concurrent, we immediately have to deal with thread-safety concerns—the
+         * mutability makes it hard to parallelize. Fortunately, we can easily alleviate these concerns using the collect() method.
+         */
+
+        System.out.println("--- use foreach add to list ---");
+        List<Person> olderThan20 = new ArrayList<>();
+        people.stream()
+                .filter(person -> person.getAge() > 20)
+                .forEach(person -> olderThan20.add(person));
+        System.out.println("People older than 20: " + olderThan20);
 
 
-        for (String friend : friends) {
-            
-        }
+        /**
+         * The collect() method takes a stream of elements and collects or gathers them into a result container.
+         * To do that, the method needs to know three things:
+         * 1. How to make a result container (for example, using the ArrayList::new method)
+         * 2. How to add a single element to a result container (for example, using the ArrayList::add method)
+         * 3. How to merge one result container into another (for example, using the ArrayList::addAll method)
+         * The last item may not be necessary for purely sequential operations; the code
+         * is designed to work for both sequential and parallel execution.
+         */
+        System.out.println();
+        System.out.println("--- use collect() 3 parameters (supplier, accumulator, and combiner)    ---");
+        people.stream()
+                .filter(person -> person.getAge() > 20)
+                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll)
+                .forEach(System.out::println);
+
+        System.out.println();
+        System.out.println("--- use collect() ---");
+        people.stream()
+                .filter(person -> person.getAge() > 20)
+                .collect(toList()).forEach(System.out::println);
+
+
+        /**
+         * Returns a Collector implementing a "group by" operation on input elements of type T, grouping elements according
+         * to a classification function, and returning the results in a Map.
+         * The classification function maps elements to some key type K. The collector produces a Map<K, List<T>> whose keys
+         * are the values resulting from applying the classification function to the input elements, and whose corresponding values
+         * are Lists containing the input elements which map to the associated key under the classification function.
+         *
+         * The groupingBy() method takes a lambda expression or a method reference— called the classifier
+         * function that returns the value of the property on which we want to do the grouping.
+         */
+
+        System.out.println();
+        System.out.println("grouping() ----");
+        people.stream()
+                .collect(Collectors.groupingBy(Person::getAge))
+                .forEach((i, l)-> System.out.printf("%d=>%s\n", i, l.toString()));
+
+        System.out.println();
+        System.out.println("grouping() with mapping ----");
+        people.stream()
+                .collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, toList())))
+                .forEach((i, l)-> System.out.printf("%d=>%s\n", i, l));
+
+
+        System.out.println();
+        System.out.println("grouping() with reducing(maxBy) ----");
+        people.stream()
+                .collect(Collectors.groupingBy(Person::getAge,
+                                               Collectors.reducing(BinaryOperator.maxBy(Comparator.comparing(person ->person.getAge())))))
+                .forEach((i, l)-> System.out.printf("%d=>%s\n", i, l));
+
+    }
+
+    @Test
+    void fileFunctions() throws IOException {
+        Files.list(Paths.get("."))
+                .forEach(path -> System.out.println("path.getFileName() = " + path.getFileName()));
     }
 }
