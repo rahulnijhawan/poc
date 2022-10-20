@@ -1,0 +1,17 @@
+Using RSC(rsocket client curl for rsocket)
+
+For single request
+SYNTAX:
+     java -jar rsc-0.9.1.jar \
+     --request \
+     --route=graphql --dataMimeType="application/graphql+json"\
+     --data='{"query":"{ greeting { greeting } }" }'\
+     --debug tcp://localhost:9083
+
+For stream(subscription)
+SYNTAX:
+     java -jar rsc-0.9.1.jar \
+     --stream \
+     --route=graphql --dataMimeType="application/graphql+json"\
+     --data='{"query":"subscription { greetings { greeting } }" }'\
+     --debug tcp://localhost:9083

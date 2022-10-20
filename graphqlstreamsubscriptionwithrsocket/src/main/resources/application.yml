@@ -1,0 +1,11 @@
+spring:
+  graphql:
+    graphiql:
+      enabled: true
+    rsocket:
+      mapping: graphql
+  rsocket:
+    server:
+      port: 9083
+
+

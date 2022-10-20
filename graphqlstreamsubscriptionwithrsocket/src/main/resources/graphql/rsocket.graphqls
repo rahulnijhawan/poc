@@ -1,0 +1,10 @@
+type Query {
+    greeting: Greeting
+}
+
+type Subscription {
+    greetings: Greeting #not using list for subscription
+}
+type Greeting {
+    greeting: String
+}
