@@ -1,0 +1,17 @@
+Request
+    SYNTAX:
+        curl -v -u rahul:pass  http://localhost:9086/graphql \
+        -H "content-type: application/json" \
+        --data-raw '{"query":"mutation { insert(name:\"rahul nij\") { id,name } }" }'
+
+        curl -v -u navi:pass  http://localhost:9086/graphql \
+                -H "content-type: application/json" \
+                --data-raw '{"query":"mutation { insert(name:\"R sen\") { id,name } }" }'
+
+        curl -v -u navi:pass  http://localhost:9086/graphql \
+                        -H "content-type: application/json" \
+                        --data-raw '{"query":"query { customerById(id:1) { id,name } }" }'
+
+        curl -v -u rahul:pass  http://localhost:9086/graphql \
+                                -H "content-type: application/json" \
+                                --data-raw '{"query":"query { customerById(id:2) { id,name } }" }'

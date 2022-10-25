@@ -1,0 +1,20 @@
+ type Query {
+     customerById(id: ID): Customer
+     helloWithName(name: String): String
+     hello: String
+     customers: [Customer]
+ }
+
+ type Mutation {
+     addCustomer(name: String): Customer
+ }
+
+ type Customer {
+     id: ID
+     name: String
+     account: Account
+ }
+
+ type Account {
+     id: ID
+ }
